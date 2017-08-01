@@ -1,25 +1,62 @@
-const express = require('express'); // Loading the express module on our server
-const app = express(); // Creates a new instance of express on our server
+let express = require('express');
+let path = require('path');
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let bodyParser = require('body-parser');
+let mongoose = require('mongoose');
+let methodOverride = require('method-override');
 
+let app = express();
 
-app.get("/", function(req, res){
-  res.send('Portfolio');
+require('dotenv').config();
+mongoose.connect(process.env.MONGODB_URI); 
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'hbs');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
+
+//requiring routes
+let index = require('./routes/index');
+app.use('/', index);
+
+let users = require('./routes/users');
+app.use('/users', users);
+
+let bucketLists = require('./routes/bucketLists');
+app.use('/users/:userId/bucketLists', bucketLists);
+
+let activities = require('./routes/activityList');
+app.use('/users/:userId/bucketLists/:bucketId/activityList', activities);
+
+let userBucketLists = require('./routes/userBucketLists');
+app.use('/users/:userId/userBucketLists', userBucketLists);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  let err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-app.get("/:name", function(req, res){
-  console.log(req.params);
-  res.send(`Hello, ${req.params.name}!`);
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
-app.get('/works', function(req, res) {
-  res.send('Works');
-});
-
-const port = process.env.PORT || 3000; // tells the server where to listen for requests
-
-app.listen(port, function() {
-  // tells the server where to listen for requests on port 3000
-
-  console.log('Listening on port ' + port);
-}); // actualizing the line above
-
+module.exports = app;
