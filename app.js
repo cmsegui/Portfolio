@@ -6,8 +6,9 @@ app.get("/", function(req, res){
   res.send('Portfolio');
 });
 
-app.get('/aboutme', function(req, res) {
-  res.send('About Me');
+app.get("/:name", function(req, res){
+  console.log(req.params);
+  res.send(`Hello, ${req.params.name}!`);
 });
 
 app.get('/works', function(req, res) {
