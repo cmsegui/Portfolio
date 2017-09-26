@@ -87,7 +87,7 @@ h6 {
 }
 
 .imgmiddle {
-    padding-top: 75px;
+    padding-top: 11em;
 }
 
 .network-name {
@@ -171,4 +171,13 @@ footer {
 
 p.copyright {
     margin: 15px 0 0;
+}
+
+.mypic {
+    padding-left: 5em;
+    padding-top: 3em;
+}
+
+.connectbuttons {
+    padding-top: 8em;
 }
