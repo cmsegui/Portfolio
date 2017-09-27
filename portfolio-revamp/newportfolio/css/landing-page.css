@@ -181,3 +181,8 @@ p.copyright {
 .connectbuttons {
     padding-top: 8em;
 }
+
+.githublink {
+    float: right;
+    padding-right: 1em;
+}
